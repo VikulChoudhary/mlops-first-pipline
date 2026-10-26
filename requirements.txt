@@ -1,7 +1,8 @@
 fastapi
-uvicorn[standard]
-scikit-learn
-numpy
-pandas
-joblib
+uvicorn
 pytest
+httpx2
+joblib
+numpy
+scipy
+scikit-learn
