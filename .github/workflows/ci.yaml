@@ -1,40 +1,55 @@
-#github actions workflow
-#github automatically looks for workflow files in the .github/workflows directory
-#give it a meaning full name
+```yaml
+# GitHub Actions workflow
+# GitHub automatically looks for workflow files in .github/workflows
+
 name: Iris ML API - CI Pipeline
-#define when Github should run the workflow
+
+# Define when GitHub should run the workflow
 on:
-  #run the workflow on push to main branch
+  # Run on push to main
   push:
-    branches: [ main ]
-  #run the workflow on pull request to main branch
+    branches: [main]
+
+  # Run on pull requests to main
   pull_request:
-    branches: [ main ]
-  #allow manual run of the workflow from Github UI
-  permissions:
-    contents: read
-  jobs:
-    test-and-build:
-      #github provide a fresh ubantu vm for each job
-      runs-on: ubuntu-latest
-      steps:
-        #checkout the code from the repo
-        - name: Checkout code
-          uses: actions/checkout@v4
-        - name: Install Python on Runner
-          uses: actions/setup-python@v5
-          with:
-            python-version: "3.12"
-          #step 3 
-          -name: Install Python dependencies
-          run: | 
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-          #step 4
-          -name: Run Automated Tests
-          run: |
-            python -m pytest -v
-          #step 5
-          -name: Build Docker Image
-          run: |
-            docker build -t iris-ml-api:${{ github.sha }} .
+    branches: [main]
+
+  # Allow manual execution from the GitHub UI
+  workflow_dispatch:
+
+# Set repository permissions
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    # GitHub provides a fresh Ubuntu VM for this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Python
+      - name: Install Python on Runner
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Step 3: Install Python dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run automated tests
+      - name: Run Automated Tests
+        run: |
+          python -m pytest -v
+
+      # Step 5: Build Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t iris-ml-api:${{ github.sha }} .
+```
